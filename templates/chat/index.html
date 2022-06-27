@@ -6,6 +6,7 @@
     <meta charset="utf-8"/>
     <title>Chat Rooms</title>
     <a href="{% url 'deslogar_usuario' %}">Logout</a>
+    <br>
     <a href="{% url 'cadastrar_usuario' %}">Cadastrar Novos usuários</a>
 </head>
 <body>
@@ -25,8 +26,6 @@
         </a>
         {% endif %}
     {%endfor%}
-    <input id="room-name-input" type="text" size="100"><br>
-    <input id="room-name-submit" type="button" value="Enter">
 
     <script>
         function redirect_to_room(id_user, id_user_in_list){

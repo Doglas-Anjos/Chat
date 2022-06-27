@@ -53,7 +53,9 @@
 <link rel="stylesheet" type="text/css" href="{% static 'bootstrap_4.6/css/bootstrap.css'%}">
 
 <main class="content">
-    <div class="container p-0">
+	<a href="{% url 'deslogar_usuario' %}">Logout</a>
+    <br>
+	<div class="container p-0">
 
 		<h1 class="h3 mb-3">Messages</h1>
 
@@ -102,7 +104,7 @@
 	);
 
 	chatSocket.onopen = function (e){
-		//FeatchMessages();
+		FetchMessages();
 	}
 	chatSocket.onmessage = function(e) {
 		const data = JSON.parse(e.data);
@@ -112,7 +114,7 @@
 			console.log(message)
 			const author = message['author'];
 			const author_pk = message['author_pk'];
-			const timestemp = message['timestemp'];
+			const timestemp = message['timestamp'];
 			const content = message['content']
 			if(username_pk === `${author_pk}`){
 				CreateMessage(content, timestemp, author, 'SENDER')
@@ -120,6 +122,18 @@
 				CreateMessage(content, timestemp, author, 'RECIVER')
 			}
 		}else{
+			const message = data['message']['messages']
+			for(let i=0; i<message.length; i++){
+				const author = message[i]['author'];
+				const author_pk = message[i]['author_pk'];
+				const timestemp = message[i]['timestamp'];
+				const content = message[i]['content']
+				if(username_pk === `${author_pk}`){
+					CreateMessage(content, timestemp, author, 'SENDER')
+				}else{
+					CreateMessage(content, timestemp, author, 'RECIVER')
+				}
+			}
 
 		}
 	};
@@ -148,7 +162,7 @@
 	};
 
 	function FetchMessages(){
-		chatSocket.send(JSON.stringify({'command': 'fetch_messages'}))
+		chatSocket.send(JSON.stringify({'command': 'fetch_messages', 'room_name': roomName}))
 	}
 
 	function CreateMessage(message, timestemp, author, sender){

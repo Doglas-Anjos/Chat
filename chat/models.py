@@ -22,11 +22,11 @@ class Message(models.Model):
     room = models.ForeignKey(RoomUser, on_delete=models.CASCADE)
     user = models.ForeignKey(user, related_name='auth', on_delete=models.CASCADE)
     content = models.TextField()
-    timestamp = models.DateField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.user.name
 
     @staticmethod
     def last_30_messages(room_name):
-        return Message.objects.filter(room_name=room_name).order_by('-timestamp')[:30]
+        return Message.objects.filter(room__room_name=room_name).order_by('-timestamp')[:30]

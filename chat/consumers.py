@@ -13,6 +13,7 @@ class ChatConsumer(WebsocketConsumer):
         print(room_name)
         messages = Message.last_30_messages(room_name)
         content = content = {
+            'command': 'fetch_messages',
             'messages': self.messages_to_json(messages)
         }
         self.send_chat_message(content)
