@@ -1,15 +1,43 @@
 <!DOCTYPE html>
+{% load static %}
 <html>
+<link rel="stylesheet" type="text/css" href="{% static 'bootstrap_4.6/css/bootstrap.css'%}">
 <head>
     <meta charset="utf-8"/>
     <title>Chat Rooms</title>
+    <a href="{% url 'deslogar_usuario' %}">Logout</a>
+    <a href="{% url 'cadastrar_usuario' %}">Cadastrar Novos usuários</a>
 </head>
 <body>
-    What chat room would you like to enter?<br>
+    <br>
+    <br>
+    Bem vindo {{user}}, selecione alguém para conversar<br><br>
+    {%for user_in_list in all_user%}
+        {% if user != user_in_list%}
+        <a href="#" class="list-group-item list-group-item-action border-0" onclick="redirect_to_room({{user.pk}}, {{user_in_list.pk}})">
+			<div class="d-flex align-items-start">
+                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40">
+                <div class="flex-grow-1 ml-3">
+                    {{user_in_list}}
+                    <div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
+                </div>
+            </div>
+        </a>
+        {% endif %}
+    {%endfor%}
     <input id="room-name-input" type="text" size="100"><br>
     <input id="room-name-submit" type="button" value="Enter">
 
     <script>
+        function redirect_to_room(id_user, id_user_in_list){
+            id_user = parseFloat(id_user);
+            id_user_in_list = parseFloat(id_user_in_list);
+            if(id_user < id_user_in_list){
+                window.location.pathname = '/chat/' + `${id_user}` + `${id_user_in_list}` + '/';
+            } else{
+                window.location.pathname = '/chat/' + `${id_user_in_list}` + `${id_user}` + '/';
+            }
+        }
         document.querySelector('#room-name-input').focus();
         document.querySelector('#room-name-input').onkeyup = function(e) {
             if (e.keyCode === 13) {  // enter, return
